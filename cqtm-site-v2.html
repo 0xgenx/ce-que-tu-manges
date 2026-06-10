@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ce Que Tu Manges — Le décrypteur d'additifs</title>
+<meta name="description" content="337 additifs alimentaires décryptés. Cherche un code E, découvre où il se cache, ce qu'il fait, et regarde son épisode.">
+<style>
+:root{
+  --bg:#0B0A08; --bg2:#11100C; --cream:#F1E6CF; --cream-dim:#B9AE92; --mute:#7A715C;
+  --red:#E03131; --green:#34C77B; --amber:#F0A028;
+  --line:rgba(241,230,207,.10); --card:rgba(241,230,207,.035);
+  --ease:cubic-bezier(.22,.9,.26,1); --spring:cubic-bezier(.34,1.4,.42,1);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--cream);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",system-ui,sans-serif;overflow-x:hidden;}
+::selection{background:rgba(224,49,49,.35);}
+a{color:inherit;text-decoration:none;}
+
+/* ───── NAV ───── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;gap:18px;
+  padding:14px 5vw;transition:all .5s var(--ease);
+}
+nav.scrolled{background:rgba(11,10,8,.78);backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%);border-bottom:1px solid var(--line);}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:3px;font-size:14px;}
+.brand svg{transition:transform .6s var(--spring);}
+.brand:hover svg{transform:rotate(-12deg) scale(1.08);}
+nav .links{margin-left:auto;display:flex;gap:26px;font-size:13px;font-weight:600;color:var(--cream-dim);}
+nav .links a{transition:color .3s;position:relative;}
+nav .links a::after{content:"";position:absolute;left:0;bottom:-5px;width:0;height:2px;background:var(--red);transition:width .35s var(--ease);}
+nav .links a:hover{color:var(--cream);}
+nav .links a:hover::after{width:100%;}
+.cta-tiktok{
+  background:var(--cream);color:#0B0A08;font-weight:800;font-size:12.5px;letter-spacing:1px;
+  padding:10px 20px;border-radius:999px;transition:all .4s var(--spring);display:inline-block;
+}
+.cta-tiktok:hover{transform:scale(1.06);box-shadow:0 8px 30px rgba(241,230,207,.25);}
+
+/* ───── HERO ───── */
+header{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;padding:0 6vw;overflow:hidden;}
+.hero-loupe{position:absolute;opacity:.05;pointer-events:none;will-change:transform;}
+h1{font-size:clamp(40px,7.2vw,104px);font-weight:850;line-height:1.04;letter-spacing:-.02em;max-width:1100px;}
+h1 .w{display:inline-block;opacity:0;transform:translateY(40px) rotate(2deg);animation:wordin 1s var(--ease) forwards;}
+@keyframes wordin{to{opacity:1;transform:none;}}
+h1 em{font-style:normal;color:var(--red);}
+.hero-sub{margin-top:26px;font-size:clamp(15px,1.6vw,20px);color:var(--cream-dim);max-width:560px;line-height:1.6;opacity:0;animation:wordin 1s 1s var(--ease) forwards;}
+.hero-ctas{margin-top:42px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center;opacity:0;animation:wordin 1s 1.25s var(--ease) forwards;}
+.btn{padding:16px 32px;border-radius:999px;font-weight:800;font-size:15px;letter-spacing:.3px;transition:all .45s var(--spring);cursor:pointer;border:none;}
+.btn-red{background:var(--red);color:#fff;}
+.btn-red:hover{transform:scale(1.06) translateY(-2px);box-shadow:0 14px 44px rgba(224,49,49,.4);}
+.btn-ghost{background:transparent;color:var(--cream);border:1.5px solid rgba(241,230,207,.3);}
+.btn-ghost:hover{border-color:var(--cream);transform:scale(1.04);}
+.scroll-hint{position:absolute;bottom:34px;font-size:11px;letter-spacing:3px;color:var(--mute);animation:bob 2.4s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
+
+/* ───── REVEAL ───── */
+.rv{opacity:0;transform:translateY(36px);filter:blur(6px);transition:opacity .9s var(--ease),transform .9s var(--ease),filter .9s var(--ease);}
+.rv.in{opacity:1;transform:none;filter:none;}
+
+/* ───── STATS ───── */
+.stats{display:flex;justify-content:center;gap:6vw;padding:90px 6vw;flex-wrap:wrap;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg2);}
+.stat b{font-size:clamp(36px,4.4vw,62px);font-weight:900;letter-spacing:-1px;display:block;background:linear-gradient(120deg,var(--cream),#cdbf9f);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.stat span{font-size:11px;letter-spacing:2.5px;color:var(--mute);font-weight:700;text-transform:uppercase;}
+
+/* ───── SECTIONS ───── */
+section{padding:110px 6vw;max-width:1380px;margin:0 auto;}
+.eyebrow{font-size:11px;letter-spacing:4px;color:var(--red);font-weight:800;text-transform:uppercase;margin-bottom:14px;}
+h2{font-size:clamp(30px,3.8vw,52px);font-weight:850;letter-spacing:-.02em;line-height:1.1;margin-bottom:14px;}
+.sec-sub{color:var(--cream-dim);font-size:16px;max-width:540px;line-height:1.65;}
+
+/* catégories */
+.cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin-top:48px;}
+.cat{
+  background:var(--card);border:1px solid var(--line);border-radius:22px;padding:26px 24px;cursor:pointer;
+  transition:transform .5s var(--spring),border-color .4s,box-shadow .5s;position:relative;overflow:hidden;
+}
+.cat::before{content:"";position:absolute;inset:0;background:radial-gradient(420px 200px at var(--mx,50%) var(--my,0%),rgba(224,49,49,.10),transparent 65%);opacity:0;transition:opacity .4s;}
+.cat:hover::before{opacity:1;}
+.cat:hover{transform:translateY(-6px);border-color:rgba(241,230,207,.25);box-shadow:0 24px 50px rgba(0,0,0,.5);}
+.cat .range{font-size:11px;letter-spacing:2px;color:var(--red);font-weight:800;}
+.cat h3{font-size:19px;font-weight:800;margin:8px 0 6px;}
+.cat p{font-size:12.5px;color:var(--mute);line-height:1.5;}
+.cat .count{margin-top:14px;font-size:12px;color:var(--cream-dim);font-weight:700;display:flex;align-items:center;gap:6px;}
+.cat .arrow{margin-left:auto;transition:transform .4s var(--spring);opacity:.5;}
+.cat:hover .arrow{transform:translateX(6px);opacity:1;}
+
+/* explorateur */
+.toolbar{position:sticky;top:64px;z-index:50;display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:14px 0;background:linear-gradient(180deg,var(--bg) 75%,transparent);}
+#q{
+  flex:0 1 360px;background:rgba(241,230,207,.05);border:1px solid var(--line);color:var(--cream);
+  border-radius:999px;padding:13px 22px;font-size:14.5px;outline:none;font-family:inherit;transition:all .35s;
+}
+#q:focus{border-color:rgba(224,49,49,.5);box-shadow:0 0 0 4px rgba(224,49,49,.1);flex-basis:420px;}
+.chip{
+  padding:9px 17px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--cream-dim);
+  font-size:12px;font-weight:700;cursor:pointer;transition:all .3s var(--ease);font-family:inherit;letter-spacing:.3px;
+}
+.chip:hover{color:var(--cream);border-color:rgba(241,230,207,.3);}
+.chip.on{background:var(--cream);color:#0B0A08;border-color:var(--cream);}
+.chip.r0.on{background:var(--green);border-color:var(--green);color:#06130c;}
+.chip.r1.on{background:var(--amber);border-color:var(--amber);color:#1d1305;}
+.chip.r2.on{background:var(--red);border-color:var(--red);color:#fff;}
+#count{font-size:12px;color:var(--mute);margin-left:auto;font-weight:600;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:13px;margin-top:26px;}
+.add{
+  background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px 19px 17px;cursor:pointer;
+  transition:transform .45s var(--spring),border-color .35s,box-shadow .45s;position:relative;will-change:transform;
+}
+.add:hover{transform:translateY(-5px) scale(1.02);border-color:rgba(241,230,207,.28);box-shadow:0 20px 44px rgba(0,0,0,.55);}
+.add .code{font-size:25px;font-weight:900;letter-spacing:-.5px;}
+.add .nm{font-size:12.5px;color:var(--cream-dim);font-weight:600;margin-top:3px;min-height:32px;line-height:1.3;}
+.add .tp{font-size:10.5px;color:var(--mute);margin-top:8px;letter-spacing:.4px;}
+.dot{position:absolute;top:18px;right:16px;width:9px;height:9px;border-radius:50%;}
+.l0{background:var(--green);box-shadow:0 0 10px rgba(52,199,123,.6);}
+.l1{background:var(--amber);box-shadow:0 0 10px rgba(240,160,40,.6);}
+.l2{background:var(--red);box-shadow:0 0 10px rgba(224,49,49,.7);}
+.vd{position:absolute;bottom:14px;right:14px;font-size:10px;color:var(--red);font-weight:800;letter-spacing:1px;opacity:.85;}
+#more{margin:36px auto 0;display:block;}
+
+/* modal */
+#ovl{position:fixed;inset:0;z-index:200;background:rgba(5,4,3,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .35s;}
+#ovl.on{opacity:1;pointer-events:auto;}
+#modal{
+  position:fixed;z-index:201;left:50%;top:50%;transform:translate(-50%,-50%) scale(.94);width:min(620px,92vw);
+  max-height:84vh;overflow-y:auto;background:#15130E;border:1px solid rgba(241,230,207,.15);border-radius:28px;
+  padding:38px 40px;opacity:0;pointer-events:none;transition:all .4s var(--spring);
+  box-shadow:0 60px 140px rgba(0,0,0,.8);
+}
+#modal.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1);}
+#modal .lv{font-size:11px;font-weight:800;letter-spacing:2px;padding:6px 14px;border-radius:999px;display:inline-block;margin-bottom:16px;}
+#modal h3{font-size:38px;font-weight:900;letter-spacing:-1px;}
+#modal h4{font-size:17px;color:var(--cream-dim);font-weight:700;margin:2px 0 20px;}
+#modal .row{margin-bottom:18px;}
+#modal .row b{display:block;font-size:10.5px;letter-spacing:2.5px;color:var(--mute);text-transform:uppercase;margin-bottom:6px;}
+#modal .row p{font-size:14.5px;line-height:1.65;color:#D8CDB4;}
+#modal .watch{
+  display:inline-flex;align-items:center;gap:10px;margin-top:10px;background:var(--red);color:#fff;
+  font-weight:800;font-size:14px;padding:13px 26px;border-radius:999px;transition:all .4s var(--spring);
+}
+#modal .watch:hover{transform:scale(1.05);box-shadow:0 12px 36px rgba(224,49,49,.45);}
+#mclose{position:absolute;top:18px;right:20px;width:34px;height:34px;border-radius:50%;background:rgba(241,230,207,.08);border:none;color:var(--cream-dim);font-size:15px;cursor:pointer;transition:all .3s;}
+#mclose:hover{color:#fff;transform:rotate(90deg);}
+
+/* tiktok band */
+.tt{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+.vids{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:44px;}
+.vid{
+  background:var(--card);border:1px solid var(--line);border-radius:22px;padding:28px 26px;
+  transition:all .5s var(--spring);position:relative;overflow:hidden;display:block;
+}
+.vid:hover{transform:translateY(-7px) scale(1.015);border-color:rgba(224,49,49,.45);box-shadow:0 26px 60px rgba(0,0,0,.55);}
+.vid .views{font-size:42px;font-weight:900;letter-spacing:-1.5px;background:linear-gradient(120deg,var(--red),#ff7b6b);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.vid .vt{font-size:14px;font-weight:700;margin-top:6px;line-height:1.4;}
+.vid .vc{font-size:11.5px;color:var(--mute);margin-top:10px;letter-spacing:1px;}
+.vid .play{position:absolute;top:22px;right:22px;opacity:.5;transition:all .4s var(--spring);}
+.vid:hover .play{opacity:1;transform:scale(1.2);}
+
+/* footer */
+footer{padding:80px 6vw 50px;text-align:center;border-top:1px solid var(--line);}
+footer .sig{display:flex;align-items:center;justify-content:center;gap:14px;font-weight:800;letter-spacing:4px;font-size:15px;}
+footer .tag{margin-top:18px;font-size:12px;letter-spacing:5px;color:var(--mute);}
+footer .mail{margin-top:26px;font-size:13px;color:var(--cream-dim);}
+footer .mail a{color:var(--cream);border-bottom:1px solid rgba(241,230,207,.3);transition:border-color .3s;}
+footer .mail a:hover{border-color:var(--red);}
+footer .dis{margin-top:34px;font-size:11px;color:var(--mute);max-width:640px;margin-left:auto;margin-right:auto;line-height:1.7;}
+@media(max-width:720px){nav .links{display:none;}section{padding:80px 5vw;}}
+
+/* mot cyclique */
+#cyc{display:inline-block;white-space:nowrap;transition:width .55s var(--spring);overflow:visible;vertical-align:bottom;text-align:left;}
+#cycword{display:inline-block;color:var(--red);}
+.cycout{animation:cycout .28s ease-in forwards;}
+.cycin{animation:cycin .5s var(--ease);}
+@keyframes cycout{to{opacity:0;transform:translateY(20px);filter:blur(8px);}}
+@keyframes cycin{from{opacity:0;transform:translateY(-20px);filter:blur(8px);}to{opacity:1;transform:none;filter:none;}}
+/* container scroll 3D */
+.cscroll{padding:40px 6vw 120px;max-width:1380px;margin:0 auto;}
+.persp{perspective:1100px;}
+.ctitle{text-align:center;margin-bottom:-30px;will-change:transform;}
+.ccard{max-width:1000px;margin:60px auto 0;border-radius:30px;padding:14px;background:#191610;border:1px solid rgba(241,230,207,.14);will-change:transform;box-shadow:0 9px 20px #0000004a,0 37px 37px #00000042,0 84px 50px #00000026,0 149px 60px #0000000a;transform:rotateX(22deg) scale(1.04);}
+.screen{background:linear-gradient(160deg,#0F0D0A,#14110C);border-radius:20px;padding:46px 44px;overflow:hidden;position:relative;}
+.screen .srow{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:3px;font-size:13px;color:var(--cream-dim);}
+.screen .sbig{font-size:clamp(28px,4vw,52px);font-weight:900;letter-spacing:-1px;margin:22px 0 8px;}
+.screen .ssub{color:var(--cream-dim);font-size:14px;max-width:480px;line-height:1.6;}
+.mq{overflow:hidden;margin:34px -44px 0;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);}
+.mq-in{display:flex;gap:10px;width:max-content;animation:mq 38s linear infinite;}
+@keyframes mq{to{transform:translateX(-50%);}}
+.mq span{padding:8px 16px;border-radius:999px;border:1px solid var(--line);font-size:12px;font-weight:800;color:var(--cream-dim);white-space:nowrap;}
+.mq span.hot{color:var(--red);border-color:rgba(224,49,49,.4);}
+.svids{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap;}
+.svid{flex:1;min-width:180px;background:rgba(241,230,207,.04);border:1px solid var(--line);border-radius:14px;padding:16px;}
+.svid b{font-size:24px;font-weight:900;color:var(--red);}
+.svid div{font-size:11px;color:var(--cream-dim);margin-top:4px;line-height:1.4;}
+/* orbite */
+#orb{position:relative;height:600px;margin-top:20px;}
+.oring{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border:1px solid rgba(241,230,207,.08);border-radius:50%;}
+.ocenter{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:5;}
+.ocenter .pulse{position:absolute;inset:-18px;border-radius:50%;border:1px solid rgba(224,49,49,.3);animation:oping 2.6s var(--ease) infinite;}
+.ocenter .pulse2{position:absolute;inset:-34px;border-radius:50%;border:1px solid rgba(241,230,207,.12);animation:oping 2.6s 1s var(--ease) infinite;}
+@keyframes oping{0%{transform:scale(.8);opacity:1;}100%{transform:scale(1.5);opacity:0;}}
+.onode{position:absolute;left:50%;top:50%;cursor:pointer;will-change:transform;text-align:center;}
+.obtn{width:58px;height:58px;border-radius:50%;background:#16130E;border:1.5px solid rgba(241,230,207,.28);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:11.5px;letter-spacing:.5px;transition:transform .4s var(--spring),border-color .3s,background .3s,box-shadow .4s;margin:0 auto;}
+.onode:hover .obtn{transform:scale(1.18);border-color:var(--cream);}
+.onode.act .obtn{background:var(--cream);color:#0B0A08;transform:scale(1.32);box-shadow:0 0 36px rgba(241,230,207,.35);border-color:var(--cream);}
+.olabel{margin-top:9px;font-size:10.5px;letter-spacing:1.5px;font-weight:700;color:var(--cream-dim);white-space:nowrap;}
+#ocard{position:absolute;left:50%;bottom:-14px;transform:translateX(-50%) translateY(14px);width:min(380px,86vw);background:rgba(21,19,14,.92);backdrop-filter:blur(20px);border:1px solid rgba(241,230,207,.18);border-radius:20px;padding:22px 24px;opacity:0;pointer-events:none;transition:all .45s var(--spring);z-index:20;}
+#ocard.on{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0);}
+#ocard .or{font-size:11px;letter-spacing:2px;color:var(--red);font-weight:800;}
+#ocard h4{font-size:19px;font-weight:800;margin:6px 0 8px;}
+#ocard p{font-size:12.5px;color:var(--cream-dim);line-height:1.6;}
+#ocard .go{display:inline-block;margin-top:14px;font-size:12px;font-weight:800;color:var(--cream);border-bottom:1.5px solid var(--red);padding-bottom:2px;}
+@media(max-width:720px){#orb{height:460px;}.ccard{transform:rotateX(16deg) scale(.96);}}
+
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a class="brand" href="#top">
+    <svg width="30" height="30" viewBox="0 0 100 100"><g fill="none" stroke-linecap="round"><circle cx="44" cy="44" r="26" stroke="#F1E6CF" stroke-width="13"/><line x1="67" y1="67" x2="88.5" y2="88.5" stroke="#E03131" stroke-width="13"/></g></svg>
+    CE QUE TU MANGES
+  </a>
+  <div class="links">
+    <a href="#categories">Catégories</a>
+    <a href="#explorer">Explorer</a>
+    <a href="#videos">Vidéos</a>
+  </div>
+  <a class="cta-tiktok" href="https://www.tiktok.com/@cequetumanges1" target="_blank" rel="noopener">SUIVRE SUR TIKTOK ↗</a>
+</nav>
+
+<header id="top">
+  <svg class="hero-loupe" id="ploupe" width="900" height="900" viewBox="0 0 100 100"><g fill="none" stroke-linecap="round"><circle cx="44" cy="44" r="26" stroke="#F1E6CF" stroke-width="13"/><line x1="67" y1="67" x2="88.5" y2="88.5" stroke="#E03131" stroke-width="13"/></g></svg>
+  <h1 id="h1"></h1>
+  <p class="hero-sub">337 additifs décryptés, un par un. Cherche un code E, découvre où il se cache, ce qu'il te fait — et regarde son épisode.</p>
+  <div class="hero-ctas">
+    <a class="btn btn-red" href="#explorer">Explorer les additifs</a>
+    <a class="btn btn-ghost" href="#videos">▶ Voir les coupables en vidéo</a>
+  </div>
+  <div class="scroll-hint">DÉFILE POUR ENQUÊTER ↓</div>
+</header>
+
+<div class="cscroll" id="enquete">
+  <div class="persp">
+    <div class="ctitle" id="ctitle">
+      <div class="eyebrow">Le dossier</div>
+      <h2>L'enquête est <em style="font-style:normal;color:var(--red)">ouverte.</em></h2>
+    </div>
+    <div class="ccard" id="ccard">
+      <div class="screen">
+        <div class="srow">
+          <svg width="22" height="22" viewBox="0 0 100 100"><g fill="none" stroke-linecap="round"><circle cx="44" cy="44" r="26" stroke="#F1E6CF" stroke-width="13"/><line x1="67" y1="67" x2="88.5" y2="88.5" stroke="#E03131" stroke-width="13"/></g></svg>
+          CE QUE TU MANGES — DOSSIER CENTRAL
+        </div>
+        <div class="sbig">337 suspects fichés.<br>Aucun n'échappe à la loupe.</div>
+        <p class="ssub">Chaque additif est identifié, localisé dans tes produits, et confronté à ce que dit la science. Les plus dangereux passent aux aveux en vidéo.</p>
+        <div class="mq"><div class="mq-in" id="mq"></div></div>
+        <div class="svids">
+          <div class="svid"><b>448K</b><div>vues — E514·515·516, les sulfates</div></div>
+          <div class="svid"><b>328K</b><div>vues — E554·555·556, les silicates</div></div>
+          <div class="svid"><b>114K</b><div>vues — E432·435·436, les émulsifiants</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat rv"><b data-n="337">0</b><span>additifs décryptés</span></div>
+  <div class="stat rv"><b data-n="96">0</b><span>vidéos publiées</span></div>
+  <div class="stat rv"><b data-n="22600" data-k="1">0</b><span>abonnés TikTok</span></div>
+  <div class="stat rv"><b data-n="91100" data-k="1">0</b><span>j'aime</span></div>
+</div>
+
+<section id="categories">
+  <div class="eyebrow rv">L'enquête par famille</div>
+  <h2 class="rv">Chaque famille a ses coupables.</h2>
+  <p class="sec-sub rv">Du colorant qui rend ton soda appétissant au conservateur qui fige ton pain de mie — clique sur une famille pour voir qui s'y cache.</p>
+  <div class="cats" id="cats"></div>
+</section>
+
+<section id="explorer">
+  <div class="eyebrow rv">L'explorateur</div>
+  <h2 class="rv">Retourne l'étiquette. <em style="font-style:normal;color:var(--red)">On s'occupe du reste.</em></h2>
+  <p class="sec-sub rv">Tape un code E ou un nom d'additif. Pastille verte : risque faible. Ambre : controversé ou suspecté. Rouge : préoccupant.</p>
+  <div class="toolbar">
+    <input id="q" type="text" placeholder="🔍  E621, carraghénane, aspartame…" autocomplete="off">
+    <button class="chip r0" data-l="0">● Faible</button>
+    <button class="chip r1" data-l="1">● Controversé</button>
+    <button class="chip r2" data-l="2">● Préoccupant</button>
+    <button class="chip" id="chipvid">▶ Avec vidéo</button>
+    <span id="count"></span>
+  </div>
+  <div class="grid" id="grid"></div>
+  <button class="btn btn-ghost" id="more">Afficher plus</button>
+</section>
+
+<section id="orbite">
+  <div class="eyebrow rv">Vue d'ensemble</div>
+  <h2 class="rv">Huit familles en orbite.</h2>
+  <p class="sec-sub rv">Clique sur une famille pour ouvrir son dossier. L'orbite tourne — comme l'industrie, elle ne s'arrête jamais.</p>
+  <div id="orb">
+    <div class="oring" style="width:520px;height:520px;"></div>
+    <div class="oring" style="width:340px;height:340px;"></div>
+    <div class="ocenter">
+      <div class="pulse"></div><div class="pulse2"></div>
+      <svg width="56" height="56" viewBox="0 0 100 100"><g fill="none" stroke-linecap="round"><circle cx="44" cy="44" r="26" stroke="#F1E6CF" stroke-width="13"/><line x1="67" y1="67" x2="88.5" y2="88.5" stroke="#E03131" stroke-width="13"/></g></svg>
+    </div>
+    <div id="onodes"></div>
+    <div id="ocard"></div>
+  </div>
+</section>
+
+<section class="tt" id="videos" style="max-width:none;">
+  <div style="max-width:1380px;margin:0 auto;">
+  <div class="eyebrow rv">Les additifs prennent vie</div>
+  <h2 class="rv">Sur TikTok, les coupables avouent eux-mêmes.</h2>
+  <p class="sec-sub rv">Chaque jour à 18h, un additif devient un personnage et raconte ce qu'il fait vraiment dans ton assiette.</p>
+  <div class="vids">
+    <a class="vid rv" href="https://www.tiktok.com/@cequetumanges1/video/7630932982978792726" target="_blank" rel="noopener">
+      <div class="play">▶</div><div class="views">448K</div>
+      <div class="vt">E514 · E515 · E516 — les sulfates qui ajustent le pH</div>
+      <div class="vc">LA VIDÉO LA PLUS VUE</div>
+    </a>
+    <a class="vid rv" href="https://www.tiktok.com/@cequetumanges1/video/7633122735517895958" target="_blank" rel="noopener">
+      <div class="play">▶</div><div class="views">328K</div>
+      <div class="vt">E554 · E555 · E556 — les silicates d'aluminium</div>
+      <div class="vc">ÉPINGLÉE</div>
+    </a>
+    <a class="vid rv" href="https://www.tiktok.com/@cequetumanges1/video/7627586282834709782" target="_blank" rel="noopener">
+      <div class="play">▶</div><div class="views">114K</div>
+      <div class="vt">E432 · E435 · E436 — les émulsifiants synthétiques</div>
+      <div class="vc">ÉPINGLÉE</div>
+    </a>
+  </div>
+  </div>
+</section>
+
+<footer>
+  <div class="sig">
+    <svg width="26" height="26" viewBox="0 0 100 100"><g fill="none" stroke-linecap="round"><circle cx="44" cy="44" r="26" stroke="#F1E6CF" stroke-width="13"/><line x1="67" y1="67" x2="88.5" y2="88.5" stroke="#E03131" stroke-width="13"/></g></svg>
+    CE QUE TU MANGES
+  </div>
+  <div class="tag">ON REGARDE À TA PLACE.</div>
+  <div class="mail">Collab & partenariats → <a href="mailto:cequetumanges@gmail.com">cequetumanges@gmail.com</a></div>
+  <div class="dis">Les informations présentées ont un but éducatif et reposent sur des sources publiques (EFSA, ANSES, IARC). Les niveaux indiqués reflètent l'état des controverses scientifiques — la dose et le contexte comptent. Ceci ne remplace pas un avis médical.</div>
+</footer>
+
+<div id="ovl"></div>
+<div id="modal"><button id="mclose">✕</button><div id="mbody"></div></div>
+
+<script>
+"use strict";
+const DATA = [{"c":"E100","n":"Curcumine","g":"Colorants (E100)","t":"Colorant jaune/orange","r":"Possible perturbation du microbiote et troubles digestifs en excès. Allergies rares.","a":"Fromages, moutardes, sauces, produits laitiers, confiseries","l":1,"v":"7635359581790735638"},{"c":"E101","n":"Riboflavine (Vitamine B2)","g":"Colorants (E100)","t":"Colorant jaune","r":"Faible risque","a":"Produits laitiers, œufs, céréales","l":0,"v":"7642426018413743392"},{"c":"E102","n":"Tartrazine","g":"Colorants (E100)","t":"Colorant jaune","r":"Hyperactivité, allergies, asthme","a":"Bonbons, sodas, yaourts","l":1,"v":"7623874357105904918"},{"c":"E104","n":"Jaune de quinoléine","g":"Colorants (E100)","t":"Colorant jaune","r":"Hyperactivité, allergies","a":"Bonbons, boissons","l":1},{"c":"E107","n":"Jaune 2G","g":"Colorants (E100)","t":"Colorant jaune","r":"Hyperactivité, allergies","a":"Boissons, confiseries (usage limité)","l":1,"v":"7642426018413743392"},{"c":"E110","n":"Sunset Yellow FCF","g":"Colorants (E100)","t":"Colorant orange","r":"Hyperactivité, allergies","a":"Chips, sodas","l":1,"v":"7623874357105904918"},{"c":"E120","n":"Cochenille / Acide carminique","g":"Colorants (E100)","t":"Colorant rouge","r":"Allergies","a":"Yaourts, bonbons","l":1,"v":"7622732004974546198"},{"c":"E122","n":"Azorubine (Carmoisine)","g":"Colorants (E100)","t":"Colorant rouge","r":"Hyperactivité, allergies","a":"Bonbons, desserts","l":1,"v":"7637984407709584662"},{"c":"E123","n":"Amarante","g":"Colorants (E100)","t":"Colorant rouge","r":"Hyperactivité, allergies","a":"Bonbons","l":1,"v":"7642426018413743392"},{"c":"E124","n":"Ponceau 4R","g":"Colorants (E100)","t":"Colorant rouge","r":"Hyperactivité, allergies","a":"Bonbons, charcuterie","l":1,"v":"7623874357105904918"},{"c":"E127","n":"Érythrosine","g":"Colorants (E100)","t":"Colorant rouge","r":"Troubles thyroïdiens, tumeurs, hyperactivité","a":"Cerises confites, yaourts","l":2,"v":"7621624545962724631"},{"c":"E129","n":"Rouge Allura AC","g":"Colorants (E100)","t":"Colorant rouge","r":"Hyperactivité, allergies, asthme","a":"Bonbons, sodas, glaces, céréales","l":1,"v":"7642793401326374176"},{"c":"E131","n":"Bleu patenté V","g":"Colorants (E100)","t":"Colorant bleu","r":"Hyperactivité, allergies","a":"Desserts","l":1,"v":"7643162083395128608"},{"c":"E132","n":"Indigotine","g":"Colorants (E100)","t":"Colorant bleu","r":"Hyperactivité, allergies","a":"Bonbons","l":1,"v":"7643539523829320992"},{"c":"E133","n":"Bleu brillant FCF","g":"Colorants (E100)","t":"Colorant bleu","r":"Hyperactivité, allergies","a":"Bonbons","l":1,"v":"7644264162411007265"},{"c":"E140","n":"Chlorophylle","g":"Colorants (E100)","t":"Colorant vert","r":"Faible risque","a":"Produits verts","l":0,"v":"7637984407709584662"},{"c":"E141","n":"Chlorophyllines de cuivre","g":"Colorants (E100)","t":"Colorant vert","r":"Faible risque","a":"Produits verts","l":0,"v":"7624594478917143811"},{"c":"E142","n":"Vert S","g":"Colorants (E100)","t":"Colorant vert","r":"Suspicion cancérigène, allergies","a":"Desserts, boissons","l":2,"v":"7621624545962724631"},{"c":"E150a","n":"Caramel simple","g":"Colorants (E100)","t":"Colorant brun","r":"Faible risque","a":"Sodas, bières, sauces | Image générée + prompts vidéo créés (21:13)","l":0,"v":"7645393587110169888"},{"c":"E150b","n":"Caramel au sulfite","g":"Colorants (E100)","t":"Colorant brun","r":"Faible risque","a":"Bières, sauces","l":0},{"c":"E150c","n":"Caramel ammoniacal","g":"Colorants (E100)","t":"Colorant brun","r":"Contient 4-MEI (cancérigène potentiel)","a":"Sodas, bières","l":2},{"c":"E150d","n":"Caramel au sulfite d'ammonium","g":"Colorants (E100)","t":"Colorant brun","r":"Contient 4-MEI (cancérigène potentiel)","a":"Sodas, sauces","l":2,"v":"7622732004974546198"},{"c":"E151","n":"Noir brillant BN","g":"Colorants (E100)","t":"Colorant noir","r":"Allergies sévères","a":"Bonbons noirs","l":1,"v":"7638689012399492374"},{"c":"E153","n":"Charbon végétal","g":"Colorants (E100)","t":"Colorant noir (naturel)","r":"Noircissement des selles. Peu d’études à long terme.","a":"Bonbons, confiseries","l":1,"v":"7637231509136624918"},{"c":"E155","n":"Brun HT","g":"Colorants (E100)","t":"Colorant brun (azoïque)","r":"Hyperactivité, allergies, asthme. Suspicion microbiote.","a":"Bonbons, chocolats, glaces","l":1,"v":"7639452763734166817"},{"c":"E160a","n":"Bêta-carotène","g":"Colorants (E100)","t":"Colorant orange","r":"Risque cancer poumon chez fumeurs","a":"Jus, margarines","l":2},{"c":"E160b","n":"Roucou / Bixine","g":"Colorants (E100)","t":"Colorant orange","r":"Faible risque","a":"Fromages, margarines","l":0},{"c":"E160c","n":"Paprika extrait","g":"Colorants (E100)","t":"Colorant rouge/orange","r":"Faible risque","a":"Sauces, assaisonnements","l":0},{"c":"E160d","n":"Lycopène","g":"Colorants (E100)","t":"Colorant rouge","r":"Faible risque","a":"Sauces tomate, boissons","l":0},{"c":"E160e","n":"Esters d'apo-8'-caroténal","g":"Colorants (E100)","t":"Colorant orange","r":"Faible risque","a":"Fromages, boissons","l":0,"v":"7646871564624874785"},{"c":"E161","n":"Xanthophylles","g":"Colorants (E100)","t":"Colorant jaune/orange","r":"Faible risque","a":"Produits laitiers, boissons, confiseries","l":0,"v":"7646871564624874785"},{"c":"E161b","n":"Lutéine","g":"Colorants (E100)","t":"Colorant jaune","r":"Faible risque","a":"Œufs, produits laitiers","l":0},{"c":"E161g","n":"Canthaxanthine","g":"Colorants (E100)","t":"Colorant orange","r":"Risque de dépôts rétiniens","a":"Aliments pour animaux (usage alimentaire limité)","l":1},{"c":"E162","n":"Betterave rouge / Bétanine","g":"Colorants (E100)","t":"Colorant rouge","r":"Faible risque","a":"Yaourts, glaces, bonbons","l":0,"v":"7646871564624874785"},{"c":"E163","n":"Anthocyanes","g":"Colorants (E100)","t":"Colorant rouge/violet (naturel)","r":"Troubles digestifs possibles. Allergies rares.","a":"Jus, bonbons, yaourts","l":1,"v":"7634639786338225430"},{"c":"E170","n":"Carbonate de calcium","g":"Colorants / Régulateur d’acidité (E100)","t":"Colorant blanc / Régulateur d’acidité","r":"Risque d’hypercalcémie et calculs rénaux en excès.","a":"Aliments enrichis, confiseries, pains","l":1,"v":"7635359581790735638"},{"c":"E171","n":"Dioxyde de titane","g":"Colorants (E100)","t":"Colorant blanc","r":"Accumulation, génotoxicité, inflammation (interdit UE)","a":"Chewing-gums, bonbons, sauces","l":2,"v":"7609299971979873558"},{"c":"E172","n":"Oxydes et hydroxydes de fer","g":"Colorants (E100)","t":"Colorant brun/noir","r":"Accumulation possible de fer","a":"Olives noires, décorations","l":1},{"c":"E173","n":"Aluminium","g":"Colorants (E100)","t":"Colorant argent","r":"Accumulation aluminium","a":"Bonbons","l":1,"v":"7624231218703338774"},{"c":"E174","n":"Argent","g":"Colorants (E100)","t":"Colorant argenté","r":"Accumulation (argyrie)","a":"Décoration confiseries","l":1,"v":"7637231509136624918"},{"c":"E175","n":"Or","g":"Colorants (E100)","t":"Colorant doré","r":"Accumulation, perturbation microbiote","a":"Décoration pâtisseries","l":1,"v":"7637231509136624918"},{"c":"E180","n":"Litholrubine BK","g":"Colorants (E100)","t":"Colorant rouge","r":"Allergies possibles","a":"Fromages à croûte rouge","l":1},{"c":"E181","n":"Tanins (alimentaires)","g":"Colorants / Antioxydants (E100)","t":"Colorant / Antioxydant naturel","r":"Troubles digestifs, interférence absorption fer","a":"Vins, jus, confiseries","l":1},{"c":"E182","n":"Orcein (Orchil)","g":"Colorants (E100)","t":"Colorant violet naturel (lichen)","r":"Faible risque, peu utilisé","a":"Fromages, vins, usage limité","l":0},{"c":"E200","n":"Acide sorbique","g":"Conservateurs (E200)","t":"Conservateur","r":"Irritations digestives et cutanées possibles en excès","a":"Fromages, vins, confiseries","l":1},{"c":"E201","n":"Sorbate de sodium","g":"Conservateurs (E200)","t":"Conservateur","r":"Allergies et migraines possibles","a":"Fromages, boissons","l":1},{"c":"E202","n":"Sorbate de potassium","g":"Conservateurs (E200)","t":"Conservateur","r":"","a":"Yaourts, fromages","l":1},{"c":"E210","n":"Acide benzoïque","g":"Conservateurs (E200)","t":"Conservateur","r":"Allergies, troubles digestifs","a":"Sodas, sauces","l":1},{"c":"E211","n":"Benzoate de sodium","g":"Conservateurs (E200)","t":"Conservateur","r":"Forme benzène (cancérigène)","a":"Sodas","l":2},{"c":"E212","n":"Benzoate de potassium","g":"Conservateurs (E200)","t":"Conservateur","r":"Forme benzène avec vitamine C","a":"Sodas, sauces","l":1},{"c":"E213","n":"Benzoate de calcium","g":"Conservateurs (E200)","t":"Conservateur","r":"Allergies, troubles digestifs","a":"Boissons, confiseries","l":1},{"c":"E214","n":"Parahydroxybenzoate d'éthyle","g":"Conservateurs (E200)","t":"Conservateur","r":"Perturbateur endocrinien","a":"Produits cosmétiques alimentaires","l":1},{"c":"E215","n":"Parahydroxybenzoate d'éthyle sodique","g":"Conservateurs (E200)","t":"Conservateur","r":"Perturbateur endocrinien","a":"Produits cosmétiques alimentaires","l":1},{"c":"E218","n":"Méthylparabène","g":"Conservateurs (E200)","t":"Conservateur","r":"Perturbateur endocrinien","a":"Produits cosmétiques alimentaires","l":1},{"c":"E219","n":"Propylparabène","g":"Conservateurs (E200)","t":"Conservateur","r":"Perturbateur endocrinien","a":"Produits cosmétiques alimentaires","l":1},{"c":"E220","n":"Anhydride sulfureux","g":"Conservateurs (E200)","t":"Conservateur","r":"Asthme sévère","a":"Vins, fruits secs","l":1,"v":"7622732004974546198"},{"c":"E221","n":"Sulfite de sodium","g":"Conservateurs (E200)","t":"Conservateur","r":"Asthme et réactions allergiques","a":"Vins, fruits secs","l":1},{"c":"E222","n":"Bisulfite de sodium","g":"Conservateurs (E200)","t":"Conservateur","r":"Asthme","a":"Vins","l":1},{"c":"E223","n":"Disulfite de sodium","g":"Conservateurs (E200)","t":"Conservateur","r":"Asthme","a":"Vins","l":1,"v":"7624231218703338774"},{"c":"E224","n":"Métabisulfite de potassium","g":"Conservateurs (E200)","t":"Conservateur","r":"Asthme, + risque cancer","a":"Vins, charcuterie","l":2},{"c":"E233","n":"Thiabendazole","g":"Conservateurs (E200)","t":"Fongicide","r":"Perturbateur endocrinien","a":"Fruits","l":1},{"c":"E338","n":"Acide phosphorique","g":"Acidifiants (E300)","t":"Acidifiant","r":"Diabète type 2, troubles osseux et rénaux","a":"Sodas cola","l":1},{"c":"E239","n":"Hexamine","g":"Conservateurs (E200)","t":"Conservateur","r":"Libère formaldéhyde","a":"Fromages","l":1,"v":"7613737631368613142"},{"c":"E240","n":"Formaldéhyde","g":"Conservateur (E200)","t":"Conservateur","r":"Cancérogène (IARC)","a":"Fromages à pâte pressée","l":2},{"c":"E242","n":"Dicarbonate de diméthyle","g":"Conservateur (E200)","t":"Conservateur / Stérilisant à froid","r":"Toxique à l’état pur (irritant, corrosif)","a":"Boissons aromatisées, jus, thés glacés","l":1},{"c":"E249","n":"Nitrite de potassium","g":"Conservateurs (E200)","t":"Conservateur","r":"Nitrosamines cancérigènes","a":"Charcuterie","l":2,"v":"7636102475245751575"},{"c":"E250","n":"Nitrite de sodium","g":"Conservateurs (E200)","t":"Conservateur","r":"Nitrosamines, cancer","a":"Charcuterie","l":2,"v":"7640205506740555041"},{"c":"E252","n":"Nitrate de potassium","g":"Conservateurs (E200)","t":"Conservateur","r":"Nitrosamines cancérigènes","a":"Charcuterie","l":2,"v":"7623488025460231446"},{"c":"E260","n":"Acide acétique","g":"Acidifiants (E200)","t":"Acidifiant / conservateur","r":"+ risque diabète type 2","a":"Vinaigrettes, sauces","l":1,"v":"7610021631549033731"},{"c":"E261","n":"Acétate de potassium","g":"Acidifiants (E200)","t":"Régulateur d’acidité","r":"Troubles digestifs en excès","a":"Aliments transformés","l":1},{"c":"E262","n":"Acétates de sodium","g":"Acidifiants (E200)","t":"Régulateur d’acidité","r":"Troubles digestifs en excès","a":"Aliments transformés","l":1},{"c":"E263","n":"Acétate de calcium","g":"Acidifiants (E200)","t":"Régulateur d’acidité","r":"Troubles digestifs en excès","a":"Aliments transformés","l":1},{"c":"E270","n":"Acide lactique","g":"Acidifiants (E200)","t":"Acidifiant","r":"Troubles digestifs en excès","a":"Yaourts, boissons, confiseries","l":1,"v":"7642025357784206614"},{"c":"E280","n":"Acide propionique","g":"Conservateurs (E200)","t":"Conservateur","r":"Irritations digestives possibles","a":"Pains industriels, fromages","l":1},{"c":"E281","n":"Propionate de sodium","g":"Conservateurs (E200)","t":"Conservateur","r":"Irritations digestives","a":"Pains industriels","l":1},{"c":"E282","n":"Propionate de calcium","g":"Conservateurs (E200)","t":"Conservateur","r":"Irritations digestives","a":"Pains industriels","l":1},{"c":"E283","n":"Propionate de potassium","g":"Conservateurs (E200)","t":"Conservateur","r":"Irritations digestives","a":"Pains industriels","l":1},{"c":"E284","n":"Acide borique","g":"Conservateurs (E200)","t":"Conservateur / Antimicrobien","r":"Toxicité reproductive, accumulation","a":"Caviar","l":1,"v":"7636864972508679446"},{"c":"E285","n":"Tétraborate de sodium (Borax)","g":"Conservateurs (E200)","t":"Conservateur / Antimicrobien","r":"Toxicité reproductive, troubles neurologiques","a":"Caviar","l":1,"v":"7636864972508679446"},{"c":"E290","n":"Dioxyde de carbone","g":"Gaz (E200)","t":"Gaz propulseur","r":"Diabète via boissons gazeuses","a":"Sodas, eaux pétillantes","l":1,"v":"7619393316945136918"},{"c":"E292","n":"Acide malique","g":"Acidifiants (E300)","t":"Acidifiant / Exhausteur de goût","r":"Irritations digestives (brûlures d’estomac, nausées) en excès. Peut perturber l’équilibre acido-basique.","a":"Boissons, bonbons, fruits en conserve, sauces, pâtisseries","l":1,"v":"7642025357784206614"},{"c":"E296","n":"Acide malique","g":"Acidifiants (E200)","t":"Acidifiant / Exhausteur de goût","r":"Irritations digestives en excès","a":"Boissons, bonbons","l":1,"v":"7635359581790735638"},{"c":"E297","n":"Acide fumarique","g":"Acidifiants (E200)","t":"Acidifiant","r":"Troubles digestifs (brûlures d’estomac)","a":"Boissons, bonbons, pâtisseries","l":1},{"c":"E300","n":"Acide ascorbique (Vitamine C)","g":"Antioxydants (E300)","t":"Antioxydant / Acidifiant","r":"Faible risque","a":"Charcuterie, boissons, confiseries","l":0},{"c":"E301","n":"Ascorbate de sodium","g":"Antioxydants (E300)","t":"Antioxydant / Conservateur","r":"Peu d’effets néfastes","a":"Charcuterie, viandes","l":1},{"c":"E302","n":"Ascorbate de calcium","g":"Antioxydants (E300)","t":"Antioxydant","r":"Peu d’effets néfastes","a":"Aliments transformés","l":1},{"c":"E304","n":"Ascorbyl palmitate","g":"Antioxydants (E300)","t":"Antioxydant","r":"Peu d’effets néfastes","a":"Huiles, margarines","l":1},{"c":"E306","n":"Extrait naturel de tocophérols","g":"Antioxydants (E300)","t":"Antioxydant naturel","r":"Faible risque","a":"Huiles, céréales","l":0},{"c":"E307","n":"Alpha-tocophérol","g":"Antioxydants (E300)","t":"Antioxydant naturel","r":"Troubles digestifs en excès","a":"Huiles, margarines","l":1,"v":"7638356226492910870"},{"c":"E308","n":"Gamma-tocophérol","g":"Antioxydants (E300)","t":"Antioxydant naturel","r":"Troubles digestifs en excès","a":"Huiles végétales","l":1,"v":"7638356226492910870"},{"c":"E309","n":"Delta-tocophérol","g":"Antioxydants (E300)","t":"Antioxydant naturel","r":"Troubles digestifs en excès","a":"Huiles végétales","l":1,"v":"7638356226492910870"},{"c":"E310","n":"Gallate de propyle","g":"Antioxydants (E300)","t":"Antioxydant","r":"Risque cancer suspecté, irritations","a":"Huiles, chewing-gums","l":2},{"c":"E311","n":"Gallate d'octyle","g":"Antioxydants (E300)","t":"Antioxydant","r":"Risque cancer suspecté. Irritations digestives possibles.","a":"Huiles, graisses, snacks frits, chewing-gums","l":2,"v":"7639452763734166817"},{"c":"E312","n":"Gallate de dodécyle","g":"Antioxydants (E300)","t":"Antioxydant","r":"Risque cancer suspecté. Irritations digestives possibles.","a":"Huiles, graisses, snacks frits, chewing-gums","l":2,"v":"7639452763734166817"},{"c":"E315","n":"Érythorbate de sodium","g":"Antioxydants (E300)","t":"Conservateur","r":"Peu d’effets néfastes","a":"Charcuterie","l":1},{"c":"E316","n":"Érythorbate de sodium","g":"Antioxydants (E300)","t":"Conservateur","r":"Peu d’effets néfastes","a":"Charcuterie","l":1},{"c":"E319","n":"TBHQ","g":"Antioxydants (E300)","t":"Antioxydant","r":"Dommages hépatiques, possible cancérigène","a":"Huiles, snacks frits","l":2,"v":"7618676250634210582"},{"c":"E320","n":"BHA","g":"Antioxydants (E300)","t":"Antioxydant","r":"Possible cancérigène","a":"Huiles, snacks","l":2,"v":"7624977418780069123"},{"c":"E321","n":"BHT","g":"Antioxydants (E300)","t":"Antioxydant","r":"Possible cancérigène","a":"Huiles, snacks","l":2,"v":"7625732078847429910"},{"c":"E322","n":"Lécithines","g":"Émulsifiants (E300)","t":"Émulsifiant","r":"Perturbation endocrinienne, diabète","a":"Chocolat, sauces","l":1,"v":"7625732078847429910"},{"c":"E330","n":"Acide citrique","g":"Acidifiants (E300)","t":"Acidifiant","r":"Érosion dentaire, diabète en excès","a":"Sodas, jus","l":1,"v":"7619022464953224470"},{"c":"E331","n":"Citrates de sodium","g":"Acidifiants (E300)","t":"Régulateur d’acidité","r":"Troubles digestifs en excès","a":"Sodas, fromages","l":1,"v":"7642025357784206614"},{"c":"E332","n":"Citrates de potassium","g":"Acidifiants (E300)","t":"Régulateur d’acidité","r":"Troubles digestifs, déséquilibre électrolytique","a":"Boissons, aliments transformés","l":1},{"c":"E333","n":"Citrates de calcium","g":"Acidifiants (E300)","t":"Régulateur d’acidité / Raffermissant","r":"Troubles digestifs, risque hypercalcémie","a":"Confiseries, boissons","l":1},{"c":"E334","n":"Acide tartrique","g":"Acidifiants (E300)","t":"Acidifiant / Agent levant","r":"Irritations digestives en excès","a":"Vins, confiseries, pâtisseries","l":1},{"c":"E335","n":"Tartrates de sodium","g":"Acidifiants (E300)","t":"Régulateur d’acidité","r":"Troubles digestifs","a":"Boissons, pâtisseries","l":1},{"c":"E336","n":"Tartrates de potassium","g":"Acidifiants (E300)","t":"Régulateur d’acidité","r":"Troubles digestifs","a":"Vins, pâtisseries","l":1},{"c":"E337","n":"Tartrate double de sodium et potassium","g":"Acidifiants (E300)","t":"Régulateur d’acidité","r":"Troubles digestifs","a":"Vins, confiseries","l":1},{"c":"E338","n":"Acide phosphorique","g":"Acidifiants (E300)","t":"Acidifiant","r":"Diabète type 2, troubles osseux et rénaux","a":"Sodas cola","l":1},{"c":"E339","n":"Phosphate de sodium","g":"Régulateurs d’acidité (E300)","t":"Régulateur d’acidité / Stabilisant","r":"Excès de phosphore : risques rénaux, osseux, cardio","a":"Charcuterie, fromages fondus, sodas","l":1},{"c":"E340","n":"Phosphate de potassium","g":"Régulateurs d’acidité (E300)","t":"Régulateur d’acidité / Stabilisant","r":"Excès de phosphore : risques rénaux et osseux","a":"Boissons, charcuterie","l":1},{"c":"E341","n":"Phosphate de calcium","g":"Régulateurs d’acidité (E300)","t":"Régulateur d’acidité / Stabilisant","r":"Déséquilibre calcium/phosphore","a":"Pâtisseries, fromages","l":1},{"c":"E343","n":"Phosphate de magnésium","g":"Régulateurs d’acidité (E300)","t":"Régulateur d’acidité / Anti-agglomérant","r":"Excès de magnésium (troubles digestifs)","a":"Sel, poudres, compléments","l":1},{"c":"E350","n":"Malates de sodium","g":"Acidifiants (E300)","t":"Régulateur d’acidité","r":"Troubles digestifs en excès","a":"Boissons, confiseries","l":1},{"c":"E351","n":"Malate de potassium","g":"Acidifiants (E300)","t":"Régulateur d’acidité","r":"Troubles digestifs en excès","a":"Boissons, aliments transformés","l":1},{"c":"E352","n":"Malates de calcium","g":"Acidifiants (E300)","t":"Régulateur d’acidité","r":"Troubles digestifs en excès","a":"Boissons, confiseries","l":1},{"c":"E353","n":"Acide métatartrique","g":"Acidifiants (E300)","t":"Acidifiant / Stabilisant","r":"Troubles digestifs","a":"Vins","l":1},{"c":"E354","n":"Tartrate de calcium","g":"Acidifiants (E300)","t":"Régulateur d’acidité","r":"Troubles digestifs","a":"Vins, pâtisseries","l":1},{"c":"E355","n":"Acide adipique","g":"Acidifiants (E300)","t":"Acidifiant","r":"Troubles digestifs en excès","a":"Boissons, gelées","l":1},{"c":"E356","n":"Adipate de sodium","g":"Acidifiants (E300)","t":"Régulateur d’acidité","r":"Troubles digestifs","a":"Boissons, confiseries","l":1},{"c":"E357","n":"Adipate de potassium","g":"Acidifiants (E300)","t":"Régulateur d’acidité","r":"Troubles digestifs","a":"Boissons","l":1},{"c":"E363","n":"Acide succinique","g":"Régulateur d’acidité (E300)","t":"Régulateur d’acidité / Agent de saveur","r":"Troubles digestifs, déséquilibre acido-basique","a":"Boissons, bonbons","l":1,"v":"7636485681832840470"},{"c":"E363","n":"Acide succinique","g":"Régulateur d’acidité (E300)","t":"Régulateur d’acidité / Agent de saveur","r":"Troubles digestifs, déséquilibre acido-basique","a":"Boissons, bonbons","l":1,"v":"7636485681832840470"},{"c":"E370","n":"1,4-Heptonolactone","g":"Acidifiants (E300)","t":"Acidifiant","r":"Troubles digestifs en excès","a":"Usage très limité","l":1},{"c":"E380","n":"Citrate de triammonium","g":"Régulateur d’acidité (E300)","t":"Régulateur d’acidité / Stabilisant","r":"Troubles digestifs, déséquilibre électrolytique","a":"Fromages, boissons","l":1,"v":"7636485681832840470"},{"c":"E385","n":"Éthylène-diamine-tétra-acétate de calcium disodique","g":"Antioxydants / Séquestrants (E300)","t":"Antioxydant / Séquestrant","r":"Perturbe l’absorption des minéraux","a":"Conserves, sauces, charcuterie","l":1,"v":"7636485681832840470"},{"c":"E392","n":"Extrait de romarin","g":"Antioxydants (E300)","t":"Antioxydant naturel","r":"Association avec diabète dans les produits ultra-transformés","a":"Huiles, snacks, aliments transformés","l":1,"v":"7619393316945136918"},{"c":"E400","n":"Acide alginique","g":"Émulsifiants (E400)","t":"Épaississant","r":"Troubles digestifs","a":"Glaces, sauces","l":1},{"c":"E401","n":"Alginate de sodium","g":"Émulsifiants (E400)","t":"Gélifiant / Stabilisant","r":"Troubles digestifs, diminution absorption minéraux","a":"Glaces, crèmes, sauces","l":1},{"c":"E402","n":"Alginate de potassium","g":"Gélifiant / Épaississant (E400)","t":"Gélifiant / Stabilisant","r":"Troubles digestifs, diminution absorption minéraux","a":"Glaces, crèmes, yaourts","l":1,"v":"7632392052067634454"},{"c":"E403","n":"Alginate d’ammonium","g":"Gélifiant / Épaississant (E400)","t":"Gélifiant / Stabilisant","r":"Troubles digestifs (ballonnements, diarrhée)","a":"Desserts, margarines","l":1,"v":"7632392052067634454"},{"c":"E404","n":"Alginate de calcium","g":"Gélifiant / Épaississant (E400)","t":"Gélifiant / Stabilisant","r":"Troubles digestifs, perturbation microbiote","a":"Bières, glaces, sauces","l":1,"v":"7632392052067634454"},{"c":"E405","n":"Alginate de propylène glycol","g":"Gélifiants (E400)","t":"Gélifiant / Stabilisant","r":"Troubles digestifs, possible réduction absorption minéraux","a":"Glaces, boissons","l":1},{"c":"E406","n":"Agar-Agar","g":"Gélifiant (E400)","t":"Gélifiant","r":"Troubles digestifs","a":"Glaces, confitures, yaourts","l":1},{"c":"E407","n":"Carraghénane","g":"Émulsifiants (E400)","t":"Gélifiant","r":"Inflammation intestinale","a":"Glaces, yaourts","l":1,"v":"7649106172171095329"},{"c":"E407a","n":"Carraghénane transformé","g":"Émulsifiants / Gélifiants (E400)","t":"Gélifiant / Stabilisant","r":"Inflammation intestinale forte, ulcérations","a":"Glaces, yaourts, charcuterie","l":1},{"c":"E410","n":"Gomme de caroube","g":"Émulsifiants (E400)","t":"Épaississant","r":"Troubles digestifs","a":"Glaces","l":1},{"c":"E412","n":"Gomme de guar","g":"Émulsifiants (E400)","t":"Épaississant","r":"Troubles digestifs","a":"Sauces","l":1,"v":"7623488025460231446"},{"c":"E413","n":"Gomme adragante","g":"Émulsifiants (E400)","t":"Épaississant / Stabilisant","r":"Troubles digestifs","a":"Confiseries, sauces","l":1},{"c":"E414","n":"Gomme arabique","g":"Émulsifiants (E400)","t":"Stabilisant","r":"Perturbation microbiote, diabète","a":"Bonbons, boissons","l":1,"v":"7619022464953224470"},{"c":"E415","n":"Gomme xanthane","g":"Émulsifiants (E400)","t":"Épaississant","r":"Inflammation intestinale, diabète","a":"Sauces, glaces","l":1,"v":"7619022464953224470"},{"c":"E416","n":"Gomme de sterculia","g":"Émulsifiants (E400)","t":"Épaississant","r":"Troubles digestifs (ballonnements)","a":"Sauces, crèmes","l":1,"v":"7629069938816273686"},{"c":"E417","n":"Gomme tara","g":"Émulsifiants (E400)","t":"Épaississant","r":"Troubles digestifs","a":"Glaces, sauces","l":1,"v":"7629069938816273686"},{"c":"E418","n":"Gomme gellan","g":"Émulsifiants (E400)","t":"Gélifiant","r":"Troubles digestifs en excès","a":"Desserts, boissons","l":1,"v":"7629069938816273686"},{"c":"E420","n":"Sorbitol","g":"Édulcorants (E400)","t":"Humectant / édulcorant","r":"Effets laxatifs","a":"Bonbons sans sucre","l":1},{"c":"E421","n":"Mannitol","g":"Édulcorants (E400)","t":"Humectant / Anti-agglomérant","r":"Effets laxatifs","a":"Bonbons sans sucre","l":1},{"c":"E422","n":"Glycérol","g":"Émulsifiants (E400)","t":"","r":"","a":"Confiseries, boissons","l":1},{"c":"E425","n":"Konjac","g":"Émulsifiants / Gélifiants (E400)","t":"","r":"","a":"","l":1,"v":"7629423795740118274"},{"c":"E426","n":"Hémicellulose de soja","g":"Émulsifiants (E400)","t":"Émulsifiant","r":"","a":"","l":1},{"c":"E427","n":"Gomme de cassia","g":"Émulsifiants (E400)","t":"Émulsifiant","r":"","a":"","l":1},{"c":"E430","n":"Monostéarate de polyoxyéthylène (8)","g":"Émulsifiants (E400)","t":"Émulsifiant","r":"","a":"","l":1},{"c":"E431","n":"Stéarate de polyoxyéthylène (40)","g":"Émulsifiants (E400)","t":"Émulsifiant","r":"","a":"","l":1},{"c":"E432","n":"Polysorbate 20","g":"Émulsifiants (E400)","t":"Émulsifiant","r":"","a":"","l":1,"v":"7627586282834709782"},{"c":"E433","n":"Polysorbate 80","g":"Émulsifiants (E400)","t":"Émulsifiant","r":"","a":"","l":1},{"c":"E434","n":"Polysorbate 40","g":"Émulsifiants (E400)","t":"Émulsifiant","r":"","a":"","l":1,"v":"7627941010311777559"},{"c":"E435","n":"Polysorbate 60","g":"Émulsifiants (E400)","t":"","r":"Troubles digestifs en excès","a":"","l":1,"v":"7627586282834709782"},{"c":"E436","n":"Polysorbate 65","g":"Émulsifiants (E400)","t":"Gélifiant","r":"","a":"","l":1,"v":"7627586282834709782"},{"c":"E440","n":"Pectines","g":"Émulsifiants (E400)","t":"Émulsifiant","r":"Troubles digestifs","a":"","l":1},{"c":"E441","n":"Gélatine","g":"Émulsifiants (E400)","t":"","r":"","a":"","l":1},{"c":"E442","n":"Phosphatides d'ammonium","g":"Émulsifiants (E400)","t":"Stabilisant","r":"","a":"","l":1,"v":"7627941010311777559"},{"c":"E443","n":"Citrate de stéaryle","g":"Émulsifiants (E400)","t":"Émulsifiant","r":"","a":"","l":1},{"c":"E444","n":"Acétate isobutyrate de saccharose","g":"Émulsifiants (E400)","t":"Émulsifiant","r":"","a":"Charcuterie","l":1,"v":"7620914585373068566"},{"c":"E445","n":"Esters glycériques de colophane de bois","g":"Émulsifiants (E400)","t":"Émulsifiant","r":"","a":"Charcuterie","l":1},{"c":"E450","n":"Diphosphates","g":"Émulsifiants (E400)","t":"","r":"Troubles digestifs","a":"","l":1,"v":"7648743652759522592"},{"c":"E451","n":"Triphosphates","g":"Émulsifiants (E400)","t":"","r":"Troubles digestifs en excès","a":"","l":1},{"c":"E452","n":"Polyphosphates","g":"Émulsifiants (E400)","t":"Épaississant","r":"Troubles digestifs (ballonnements, diarrhée)","a":"","l":1,"v":"7624231218703338774"},{"c":"E460","n":"Cellulose","g":"Émulsifiants (E400)","t":"","r":"Troubles digestifs","a":"","l":1},{"c":"E461","n":"Méthylcellulose","g":"Émulsifiants (E400)","t":"Épaississant","r":"Troubles digestifs","a":"","l":1},{"c":"E462","n":"Éthylcellulose","g":"Émulsifiants (E400)","t":"Épaississant","r":"Troubles digestifs","a":"","l":1},{"c":"E463","n":"Hydroxypropylcellulose","g":"Émulsifiants (E400)","t":"Épaississant","r":"Troubles digestifs","a":"Aliments transformés","l":1,"v":"7628323024051178774"},{"c":"E464","n":"Hydroxypropylméthylcellulose","g":"Émulsifiants (E400)","t":"Épaississant","r":"Inflammation intestinale","a":"Glaces, sauces","l":1,"v":"7628323024051178774"},{"c":"E465","n":"Méthyléthylcellulose","g":"Émulsifiants (E400)","t":"","r":"Troubles digestifs en excès","a":"","l":1,"v":"7628323024051178774"},{"c":"E466","n":"Carboxyméthylcellulose sodique","g":"Émulsifiants (E400)","t":"","r":"Troubles digestifs","a":"Aliments transformés","l":1},{"c":"E468","n":"Carboxyméthylcellulose sodique réticulée","g":"Émulsifiants (E400)","t":"","r":"Troubles digestifs","a":"Aliments transformés","l":1},{"c":"E469","n":"Carboxyméthylcellulose enzymatiquement hydrolysée","g":"Émulsifiants (E400)","t":"Émulsifiant","r":"Troubles digestifs","a":"","l":1},{"c":"E470a","n":"Sels de sodium, potassium et calcium d'acides gras","g":"Émulsifiants (E400)","t":"","r":"Troubles digestifs en excès","a":"","l":1},{"c":"E470b","n":"Sels de magnésium d'acides gras","g":"Émulsifiants (E400)","t":"","r":"Troubles digestifs","a":"","l":1},{"c":"E471","n":"Mono et diglycérides d'acides gras","g":"Émulsifiants (E400)","t":"","r":"Troubles digestifs","a":"","l":1,"v":"7624594478917143811"},{"c":"E472a","n":"Esters acétiques des mono et diglycérides d'acides gras","g":"Émulsifiants (E400)","t":"","r":"Troubles digestifs","a":"","l":1},{"c":"E472b","n":"Esters lactiques des mono et diglycérides d'acides gras","g":"Émulsifiants (E400)","t":"","r":"Troubles digestifs","a":"Pains industriels","l":1},{"c":"E472c","n":"Esters citriques des mono et diglycérides d'acides gras","g":"Émulsifiants (E400)","t":"","r":"","a":"","l":1},{"c":"E472d","n":"Esters tartriques des mono et diglycérides d'acides gras","g":"Émulsifiants (E400)","t":"","r":"Troubles digestifs","a":"","l":1},{"c":"E472e","n":"Esters diacétyltartriques des mono et diglycérides d'acides gras","g":"Émulsifiants (E400)","t":"Émulsifiant","r":"Troubles digestifs","a":"","l":1},{"c":"E472f","n":"Esters mixtes acétiques et tartriques des mono et diglycérides","g":"Émulsifiants (E400)","t":"Émulsifiant","r":"Troubles digestifs","a":"","l":1},{"c":"E473","n":"Esters de saccharose et d'acides gras","g":"Émulsifiants (E400)","t":"Émulsifiant","r":"Troubles digestifs","a":"Glaces, sauces","l":1},{"c":"E474","n":"Sucroglycérides","g":"Émulsifiants (E400)","t":"Émulsifiant","r":"","a":"","l":1,"v":"7628696279966649622"},{"c":"E475","n":"Esters polyglycériques d'acides gras","g":"Émulsifiants (E400)","t":"Émulsifiant","r":"Troubles digestifs","a":"","l":1,"v":"7620528782289440022"},{"c":"E476","n":"Polyglycérol polyricinoléate","g":"Émulsifiants (E400)","t":"","r":"","a":"","l":1,"v":"7627941010311777559"},{"c":"E477","n":"Esters propyléneglycoliques d'acides gras","g":"Émulsifiants (E400)","t":"","r":"Troubles digestifs","a":"","l":1,"v":"7628696279966649622"},{"c":"E479b","n":"Huile de soja thermo-oxydée avec mono et diglycérides","g":"Émulsifiants (E400)","t":"","r":"","a":"Pains industriels","l":1},{"c":"E480","n":"Dioctyl sulfosuccinate de sodium","g":"Émulsifiants (E400)","t":"","r":"","a":"","l":1,"v":"7629423795740118274"},{"c":"E481","n":"Stéaroyl-2-lactylate de sodium","g":"Émulsifiants (E400)","t":"","r":"","a":"Pains industriels","l":1,"v":"7620528782289440022"},{"c":"E482","n":"Stéaroyl-2-lactylate de calcium","g":"Émulsifiants (E400)","t":"","r":"","a":"","l":1},{"c":"E483","n":"Tartrate de stéaryle","g":"Émulsifiants (E400)","t":"","r":"Troubles digestifs, perturbation microbiote","a":"","l":1,"v":"7620914585373068566"},{"c":"E485","n":"Fumarate de stéaryle sodique","g":"Émulsifiants (E400)","t":"Émulsifiant","r":"Troubles digestifs","a":"","l":1},{"c":"E486","n":"Fumarate de stéaryle calcique","g":"Émulsifiants (E400)","t":"Émulsifiant","r":"Troubles digestifs","a":"","l":1},{"c":"E491","n":"Monostéarate de sorbitan","g":"Émulsifiants (E400)","t":"Émulsifiant","r":"Troubles digestifs","a":"","l":1,"v":"7621624545962724631"},{"c":"E492","n":"Tristéarate de sorbitan","g":"Émulsifiants (E400)","t":"Émulsifiant","r":"Troubles digestifs","a":"","l":1,"v":"7628696279966649622"},{"c":"E493","n":"Monolaurate de sorbitan","g":"Émulsifiants (E400)","t":"","r":"","a":"","l":1,"v":"7629423795740118274"},{"c":"E494","n":"Monoléate de sorbitan","g":"Émulsifiants (E400)","t":"","r":"Troubles digestifs","a":"","l":1,"v":"7629814841103977750"},{"c":"E495","n":"Monopalmitate de sorbitan","g":"Émulsifiants (E400)","t":"Régulateur d’acidité","r":"Troubles digestifs","a":"Aliments transformés","l":1,"v":"7629814841103977750"},{"c":"E500","n":"Carbonates de sodium","g":"Régulateurs d'acidité (E500)","t":"","r":"","a":"","l":1,"v":"7630199000318348567"},{"c":"E501","n":"Carbonates de potassium","g":"Régulateurs d'acidité (E500)","t":"Régulateur d’acidité / Anti-agglomérant","r":"Troubles digestifs","a":"","l":1},{"c":"E503","n":"Carbonates d'ammonium","g":"Régulateurs d'acidité (E500)","t":"Régulateur d’acidité","r":"Irritations digestives","a":"","l":1,"v":"7630199000318348567"},{"c":"E504","n":"Carbonates de magnésium","g":"Régulateurs d'acidité (E500)","t":"","r":"","a":"","l":1},{"c":"E505","n":"Carbonate ferreux","g":"Régulateurs d'acidité (E500)","t":"","r":"","a":"","l":1},{"c":"E507","n":"Acide chlorhydrique","g":"Régulateurs d'acidité (E500)","t":"","r":"Troubles digestifs","a":"","l":1,"v":"7630558721856359702"},{"c":"E508","n":"Chlorure de potassium","g":"Régulateurs d'acidité (E500)","t":"Régulateur d’acidité","r":"","a":"","l":1,"v":"7630558721856359702"},{"c":"E509","n":"Chlorure de calcium","g":"Régulateurs d'acidité (E500)","t":"Régulateur d’acidité","r":"","a":"","l":1,"v":"7630558721856359702"},{"c":"E511","n":"Chlorure de magnésium","g":"Régulateurs d'acidité (E500)","t":"Régulateur d’acidité","r":"","a":"","l":1},{"c":"E512","n":"Chlorure stanneux","g":"Régulateurs d'acidité (E500)","t":"","r":"","a":"","l":1},{"c":"E513","n":"Acide sulfurique","g":"Régulateurs d'acidité (E500)","t":"Régulateur d’acidité","r":"","a":"","l":1,"v":"7614838548608322838"},{"c":"E514","n":"Sulfates de sodium","g":"Régulateurs d'acidité (E500)","t":"","r":"","a":"Fromages, boissons","l":1,"v":"7630932982978792726"},{"c":"E515","n":"Sulfates de potassium","g":"Régulateurs d'acidité (E500)","t":"Conservateur","r":"","a":"","l":1,"v":"7630932982978792726"},{"c":"E516","n":"Sulfate de calcium","g":"Régulateurs d'acidité (E500)","t":"Régulateur d’acidité","r":"","a":"","l":1,"v":"7630932982978792726"},{"c":"E517","n":"Sulfate d'ammonium","g":"Régulateurs d'acidité (E500)","t":"Régulateur d’acidité","r":"Accumulation aluminium","a":"","l":1,"v":"7631291297654983958"},{"c":"E519","n":"Sulfate de cuivre","g":"Régulateurs d'acidité (E500)","t":"Régulateur d’acidité","r":"Accumulation aluminium","a":"","l":1,"v":"7631291297654983958"},{"c":"E520","n":"Sulfate d'aluminium","g":"Régulateurs d'acidité (E500)","t":"Régulateur d’acidité","r":"Accumulation aluminium","a":"","l":1},{"c":"E521","n":"Sulfate d'aluminium et de sodium","g":"Régulateurs d'acidité (E500)","t":"Régulateur d’acidité","r":"","a":"","l":1},{"c":"E522","n":"Sulfate d'aluminium et de potassium","g":"Régulateurs d'acidité (E500)","t":"Régulateur d’acidité","r":"Irritations digestives","a":"","l":1},{"c":"E523","n":"Sulfate d'aluminium et d'ammonium","g":"Régulateurs d'acidité (E500)","t":"","r":"","a":"","l":1},{"c":"E524","n":"Hydroxyde de sodium","g":"Régulateurs d'acidité (E500)","t":"","r":"","a":"","l":1,"v":"7632012066143980822"},{"c":"E525","n":"Hydroxyde de potassium","g":"Régulateurs d'acidité (E500)","t":"","r":"Troubles digestifs","a":"Aliments transformés","l":1,"v":"7632012066143980822"},{"c":"E526","n":"Hydroxyde de calcium","g":"Régulateurs d'acidité (E500)","t":"Régulateur d’acidité / Raffermissant","r":"Irritations digestives","a":"","l":1,"v":"7632012066143980822"},{"c":"E527","n":"Hydroxyde d'ammonium","g":"Régulateurs d'acidité (E500)","t":"Régulateur d’acidité / Anti-agglomérant","r":"Troubles digestifs","a":"","l":1},{"c":"E528","n":"Hydroxyde de magnésium","g":"Régulateurs d'acidité (E500)","t":"","r":"","a":"","l":1},{"c":"E529","n":"Oxyde de calcium","g":"Régulateurs d'acidité (E500)","t":"","r":"Faible risque","a":"","l":0},{"c":"E530","n":"Oxyde de magnésium","g":"Régulateurs d'acidité (E500)","t":"","r":"Faible risque","a":"","l":0},{"c":"E535","n":"Ferrocyanure de sodium","g":"Régulateurs d'acidité (E500)","t":"","r":"Faible risque","a":"","l":0,"v":"7623488025460231446"},{"c":"E536","n":"Ferrocyanure de potassium","g":"Régulateurs d'acidité (E500)","t":"","r":"","a":"","l":1},{"c":"E538","n":"Ferrocyanure de calcium","g":"Régulateurs d'acidité (E500)","t":"","r":"","a":"Aliments transformés","l":1},{"c":"E541","n":"Phosphate d'aluminium et de sodium","g":"Régulateurs d'acidité (E500)","t":"","r":"Irritations digestives","a":"","l":1,"v":"7632784792202808598"},{"c":"E551","n":"Dioxyde de silicium","g":"Régulateurs d'acidité (E500)","t":"","r":"","a":"","l":1,"v":"7631667699428412675"},{"c":"E552","n":"Silicate de calcium","g":"Régulateurs d'acidité (E500)","t":"","r":"Faible risque","a":"","l":0,"v":"7631667699428412675"},{"c":"E553a","n":"Silicate de magnésium","g":"Régulateurs d'acidité (E500)","t":"","r":"Faible risque","a":"","l":0},{"c":"E553b","n":"Talc","g":"Régulateurs d'acidité (E500)","t":"","r":"","a":"","l":1},{"c":"E554","n":"Silicate d'aluminium et de sodium","g":"Régulateurs d'acidité (E500)","t":"","r":"","a":"","l":1,"v":"7633122735517895958"},{"c":"E555","n":"Silicate d'aluminium et de potassium","g":"Régulateurs d'acidité (E500)","t":"","r":"","a":"","l":1,"v":"7633122735517895958"},{"c":"E556","n":"Silicate d'aluminium et de calcium","g":"Régulateurs d'acidité (E500)","t":"","r":"","a":"","l":1,"v":"7633122735517895958"},{"c":"E558","n":"Bentonite","g":"Régulateurs d'acidité (E500)","t":"","r":"Faible risque","a":"Aliments transformés","l":0},{"c":"E559","n":"Silicate d'aluminium (kaolin)","g":"Régulateurs d'acidité (E500)","t":"","r":"","a":"","l":1},{"c":"E570","n":"Acides gras","g":"Régulateurs d'acidité (E500)","t":"","r":"","a":"","l":1,"v":"7633498835830000918"},{"c":"E574","n":"Acide gluconique","g":"Régulateurs d'acidité (E500)","t":"","r":"Troubles digestifs","a":"","l":1},{"c":"E575","n":"Glucono-delta-lactone","g":"Régulateur d’acidité","t":"","r":"Troubles digestifs","a":"","l":1,"v":"7633498835830000918"},{"c":"E576","n":"Gluconate de sodium","g":"Régulateur d’acidité","t":"Régulateur d’acidité / Stabilisant","r":"Troubles digestifs","a":"Fromages, boissons","l":1,"v":"7633877310634003734"},{"c":"E577","n":"Gluconate de potassium","g":"Régulateur d’acidité","t":"Régulateur d’acidité / Raffermissant","r":"","a":"","l":1,"v":"7633877310634003734"},{"c":"E578","n":"Gluconate de calcium","g":"Régulateur d’acidité","t":"","r":"","a":"","l":1,"v":"7633877310634003734"},{"c":"E579","n":"Gluconate ferreux","g":"Régulateur d’acidité","t":"","r":"","a":"","l":1},{"c":"E585","n":"Lactate ferreux","g":"Régulateur d’acidité","t":"Régulateur d’acidité","r":"Troubles digestifs","a":"","l":1},{"c":"E620","n":"Acide glutamique","g":"Exhausteurs de goût (E600)","t":"","r":"","a":"","l":1,"v":"7634247139866070294"},{"c":"E621","n":"Glutamate monosodique","g":"Exhausteurs de goût (E600)","t":"","r":"","a":"","l":1,"v":"7648376123683835168"},{"c":"E622","n":"Glutamate monopotassique","g":"Exhausteurs de goût (E600)","t":"","r":"Faible risque","a":"","l":0},{"c":"E623","n":"Diglutamate de calcium","g":"Exhausteurs de goût (E600)","t":"","r":"","a":"","l":1},{"c":"E624","n":"Glutamate monoammonique","g":"Exhausteurs de goût (E600)","t":"","r":"","a":"","l":1},{"c":"E625","n":"Diglutamate de magnésium","g":"Exhausteurs de goût (E600)","t":"","r":"Troubles digestifs en excès","a":"","l":1},{"c":"E626","n":"Acide guanylique","g":"Exhausteurs de goût (E600)","t":"","r":"","a":"","l":1,"v":"7634247139866070294"},{"c":"E627","n":"Guanylate disodique","g":"Exhausteurs de goût (E600)","t":"","r":"","a":"","l":1},{"c":"E628","n":"Guanylate dipotassique","g":"Exhausteurs de goût (E600)","t":"","r":"Troubles digestifs","a":"","l":1},{"c":"E629","n":"Guanylate de calcium","g":"Exhausteurs de goût (E600)","t":"","r":"Troubles digestifs","a":"","l":1},{"c":"E630","n":"Acide inosinique","g":"Exhausteurs de goût (E600)","t":"","r":"Troubles digestifs","a":"","l":1},{"c":"E631","n":"Inosinate disodique","g":"Exhausteurs de goût (E600)","t":"","r":"Troubles digestifs","a":"","l":1,"v":"7622388109291965718"},{"c":"E632","n":"Inosinate dipotassique","g":"Exhausteurs de goût (E600)","t":"","r":"","a":"","l":1},{"c":"E633","n":"Inosinate de calcium","g":"Exhausteurs de goût (E600)","t":"","r":"","a":"","l":1},{"c":"E634","n":"5'-ribonucléotides de calcium","g":"Exhausteurs de goût (E600)","t":"","r":"Troubles digestifs","a":"","l":1},{"c":"E635","n":"5'-ribonucléotides disodiques","g":"Exhausteurs de goût (E600)","t":"","r":"","a":"","l":1,"v":"7634639786338225430"},{"c":"E636","n":"Maltol","g":"Exhausteurs de goût (E600)","t":"","r":"","a":"Pains industriels","l":1},{"c":"E637","n":"Éthyl maltol","g":"Exhausteurs de goût (E600)","t":"","r":"","a":"Pains industriels","l":1},{"c":"E640","n":"Glycine et sel de sodium de la glycine","g":"Exhausteurs de goût (E600)","t":"","r":"","a":"Pains industriels","l":1,"v":"7634639786338225430"},{"c":"E650","n":"Acétate de zinc","g":"Exhausteurs de goût (E600)","t":"","r":"","a":"","l":1},{"c":"E900","n":"Diméthylpolysiloxane","g":"Agents d'enrobage (E900)","t":"","r":"","a":"","l":1},{"c":"E901","n":"Cire d'abeille","g":"Agents d'enrobage (E900)","t":"","r":"Faible risque","a":"Pains industriels","l":0},{"c":"E902","n":"Cire candelilla","g":"Agents d'enrobage (E900)","t":"","r":"","a":"","l":1},{"c":"E903","n":"Cire de carnauba","g":"Agents d'enrobage (E900)","t":"","r":"","a":"","l":1,"v":"7620148080809184534"},{"c":"E904","n":"Gomme laque (shellac)","g":"Agents d'enrobage (E900)","t":"","r":"Faible risque","a":"","l":0,"v":"7620148080809184534"},{"c":"E905","n":"Cire microcristalline","g":"Agents d'enrobage (E900)","t":"","r":"Faible risque","a":"","l":0,"v":"7621292857705598231"},{"c":"E906","n":"Gomme benjoin","g":"Agents d'enrobage (E900)","t":"","r":"","a":"","l":1},{"c":"E907","n":"Cire cristalline","g":"Agents d'enrobage (E900)","t":"","r":"Faible risque","a":"","l":0,"v":"7621292857705598231"},{"c":"E912","n":"Esters d'acide montanique","g":"Agents d'enrobage (E900)","t":"Gaz propulseur","r":"","a":"","l":1},{"c":"E914","n":"Cire de polyéthylène oxydée","g":"Agents d'enrobage (E900)","t":"Gaz propulseur","r":"","a":"","l":1,"v":"7621292857705598231"},{"c":"E920","n":"L-cystéine","g":"Agents d'enrobage (E900)","t":"Gaz propulseur","r":"","a":"","l":1},{"c":"E927b","n":"Carbamide","g":"Agents d'enrobage (E900)","t":"","r":"Faible risque","a":"","l":0},{"c":"E938","n":"Argon","g":"Gaz d'emballage (E900)","t":"","r":"Faible risque","a":"Usage très limité","l":0},{"c":"E939","n":"Hélium","g":"Gaz d'emballage (E900)","t":"","r":"","a":"","l":1},{"c":"E941","n":"Azote","g":"Gaz d'emballage (E900)","t":"","r":"","a":"","l":1},{"c":"E942","n":"Protoxyde d'azote","g":"Gaz d'emballage (E900)","t":"","r":"","a":"","l":1},{"c":"E943a","n":"Butane","g":"Gaz d'emballage (E900)","t":"","r":"","a":"","l":1,"v":"7636864972508679446"},{"c":"E943b","n":"Isobutane","g":"Gaz d'emballage (E900)","t":"","r":"Perturbation microbiote, diabète","a":"","l":1},{"c":"E944","n":"Propane","g":"Gaz d'emballage (E900)","t":"","r":"Faible risque","a":"","l":0},{"c":"E948","n":"Oxygène","g":"Gaz d'emballage (E900)","t":"","r":"","a":"","l":1},{"c":"E949","n":"Hydrogène","g":"Gaz d'emballage (E900)","t":"","r":"","a":"","l":1},{"c":"E950","n":"Acésulfame K","g":"Édulcorants (E900)","t":"","r":"","a":"","l":1},{"c":"E951","n":"Aspartame","g":"Édulcorants (E900)","t":"","r":"","a":"Bonbons sans sucre","l":1},{"c":"E952","n":"Cyclamates","g":"Édulcorants (E900)","t":"","r":"Effets laxatifs","a":"","l":1,"v":"7622388109291965718"},{"c":"E953","n":"Isomalt","g":"Édulcorants (E900)","t":"","r":"Effets laxatifs","a":"","l":1},{"c":"E954","n":"Saccharine","g":"Édulcorants (E900)","t":"","r":"","a":"","l":1,"v":"7622388109291965718"},{"c":"E955","n":"Sucralose","g":"Édulcorants (E900)","t":"","r":"Troubles digestifs","a":"","l":1},{"c":"E957","n":"Thaumatine","g":"Édulcorants (E900)","t":"Émulsifiant","r":"Troubles digestifs","a":"","l":1},{"c":"E959","n":"Néohespéridine dihydrochalcone","g":"Édulcorants (E900)","t":"Émulsifiant","r":"Faible risque","a":"","l":0,"v":"7619803338510552342"},{"c":"E960","n":"Glycosides de stéviol","g":"Édulcorants (E900)","t":"","r":"Faible risque","a":"","l":0,"v":"7622026719670586646"},{"c":"E961","n":"Néotame","g":"Édulcorants (E900)","t":"","r":"Faible risque","a":"","l":0},{"c":"E962","n":"Sel d'aspartame-acésulfame","g":"Édulcorants (E900)","t":"","r":"Faible risque","a":"","l":0},{"c":"E965","n":"Maltitol","g":"Édulcorants (E900)","t":"","r":"Faible risque","a":"","l":0,"v":"7622026719670586646"},{"c":"E966","n":"Lactitol","g":"Édulcorants (E900)","t":"","r":"Faible risque","a":"","l":0},{"c":"E967","n":"Xylitol","g":"Édulcorants (E900)","t":"","r":"Faible risque","a":"Fromages","l":0,"v":"7619803338510552342"},{"c":"E968","n":"Érythritol","g":"Édulcorants (E900)","t":"","r":"","a":"","l":1,"v":"7619803338510552342"},{"c":"E969","n":"Advantame","g":"Édulcorants (E900)","t":"","r":"","a":"","l":1},{"c":"E1001","n":"Sels et esters de choline","g":"Autres additifs (E1000+)","t":"","r":"","a":"","l":1},{"c":"E1100","n":"Amylases","g":"Enzymes (E1100)","t":"","r":"","a":"","l":1},{"c":"E1101","n":"Protéases","g":"Enzymes (E1100)","t":"","r":"Faible risque","a":"","l":0},{"c":"E1102","n":"Glucose oxydase","g":"Enzymes (E1100)","t":"Émulsifiant","r":"Troubles digestifs","a":"Aliments transformés","l":1},{"c":"E1103","n":"Invertase","g":"Enzymes (E1100)","t":"Émulsifiant","r":"Troubles digestifs","a":"","l":1},{"c":"E1104","n":"Lipase","g":"Enzymes (E1100)","t":"Émulsifiant","r":"Troubles digestifs","a":"Aliments transformés","l":1},{"c":"E1105","n":"Lysozyme","g":"Enzymes (E1100)","t":"Émulsifiant","r":"Troubles digestifs","a":"","l":1},{"c":"E1200","n":"Polydextrose","g":"Amidons modifiés (E1200+)","t":"Émulsifiant","r":"Troubles digestifs","a":"Aliments transformés","l":1,"v":"7620148080809184534"},{"c":"E1201","n":"Polyvinylpyrrolidone","g":"Amidons modifiés (E1200+)","t":"Émulsifiant","r":"Troubles digestifs","a":"Aliments transformés","l":1},{"c":"E1202","n":"Polyvinylpolypyrrolidone","g":"Amidons modifiés (E1200+)","t":"Épaississant","r":"Troubles digestifs","a":"","l":1},{"c":"E1203","n":"Alcool polyvinylique","g":"Amidons modifiés (E1200+)","t":"Épaississant","r":"Troubles digestifs","a":"","l":1,"v":"7623121900914380054"},{"c":"E1204","n":"Pullulane","g":"Amidons modifiés (E1200+)","t":"Épaississant","r":"Troubles digestifs","a":"","l":1},{"c":"E1400","n":"Dextrines","g":"Amidons modifiés (E1400)","t":"Épaississant","r":"Troubles digestifs","a":"","l":1},{"c":"E1401","n":"Amidon traité à l'acide","g":"Amidons modifiés (E1400)","t":"Épaississant","r":"Troubles digestifs","a":"","l":1},{"c":"E1402","n":"Amidon traité aux alcalis","g":"Amidons modifiés (E1400)","t":"Épaississant","r":"Troubles digestifs","a":"","l":1},{"c":"E1403","n":"Amidon blanchi","g":"Amidons modifiés (E1400)","t":"Épaississant","r":"Troubles digestifs","a":"","l":1},{"c":"E1404","n":"Amidon oxydé","g":"Amidons modifiés (E1400)","t":"Épaississant","r":"Troubles digestifs","a":"","l":1},{"c":"E1405","n":"Amidon traité aux enzymes","g":"Amidons modifiés (E1400)","t":"Émulsifiant","r":"Troubles digestifs","a":"","l":1},{"c":"E1410","n":"Phosphate d'amidon monosubstitué","g":"Amidons modifiés (E1400)","t":"Épaississant","r":"Troubles digestifs","a":"","l":1},{"c":"E1411","n":"Glycérol d'amidon disubstitué","g":"Amidons modifiés (E1400)","t":"","r":"Troubles digestifs","a":"","l":1},{"c":"E1412","n":"Phosphate d'amidon disubstitué","g":"Amidons modifiés (E1400)","t":"Émulsifiant","r":"Troubles digestifs","a":"Aliments transformés","l":1},{"c":"E1413","n":"Phosphate d'amidon phosphaté disubstitué","g":"Amidons modifiés (E1400)","t":"","r":"Troubles digestifs en excès","a":"","l":1},{"c":"E1414","n":"Phosphate d'amidon acétylé disubstitué","g":"Amidons modifiés (E1400)","t":"","r":"","a":"","l":1},{"c":"E1420","n":"Amidon acétylé","g":"Amidons modifiés (E1400)","t":"","r":"Troubles digestifs","a":"","l":1},{"c":"E1422","n":"Adipate d'amidon acétylé disubstitué","g":"Amidons modifiés (E1400)","t":"Émulsifiant","r":"Troubles digestifs","a":"","l":1},{"c":"E1440","n":"Amidon hydroxypropylé","g":"Amidons modifiés (E1400)","t":"Émulsifiant","r":"Troubles digestifs","a":"","l":1},{"c":"E1441","n":"Glycérol d'amidon hydroxypropylé disubstitué","g":"Amidons modifiés (E1400)","t":"Émulsifiant","r":"Troubles digestifs","a":"","l":1},{"c":"E1442","n":"Phosphate d'amidon hydroxypropylé","g":"Amidons modifiés (E1400)","t":"Émulsifiant","r":"Troubles digestifs","a":"Aliments transformés","l":1},{"c":"E1450","n":"Octényl succinate d'amidon sodique","g":"Amidons modifiés (E1400)","t":"Émulsifiant","r":"Troubles digestifs","a":"","l":1},{"c":"E1451","n":"Amidon oxydé acétylé","g":"Amidons modifiés (E1400)","t":"Émulsifiant","r":"Troubles digestifs","a":"","l":1}];
+
+/* hero : intro mot a mot + mot cyclique */
+const intro = "Tu veux vraiment savoir ce que tu".split(" ");
+document.getElementById("h1").innerHTML =
+  intro.map((w,i)=>`<span class="w" style="animation-delay:${.15+i*.09}s">${w}</span>`).join(" ")
+  + ` <span class="w" id="cyc" style="animation-delay:${.15+intro.length*.09}s"><span id="cycword">manges</span></span><span class="w" style="animation-delay:${.15+intro.length*.09}s">&nbsp;?</span>`;
+const CYCLE = ["manges","bois","avales","achètes","crois manger"];
+const cyc = document.getElementById("cyc");
+let cycI = 0;
+function measure(t){
+  const m=document.createElement("span");
+  m.style.cssText="position:absolute;visibility:hidden;white-space:nowrap;";
+  m.textContent=t;
+  document.getElementById("h1").appendChild(m);
+  const w=m.getBoundingClientRect().width;m.remove();return w;
+}
+setTimeout(()=>{cyc.style.width=measure(CYCLE[0])+"px";},1800);
+setInterval(()=>{
+  const old=document.getElementById("cycword");
+  old.classList.add("cycout");
+  setTimeout(()=>{
+    cycI=(cycI+1)%CYCLE.length;
+    cyc.style.width=measure(CYCLE[cycI])+"px";
+    old.textContent=CYCLE[cycI];
+    old.classList.remove("cycout");old.classList.add("cycin");
+    setTimeout(()=>old.classList.remove("cycin"),550);
+  },280);
+},2900);
+
+/* container scroll 3D */
+const ccard=document.getElementById("ccard"), ctitle=document.getElementById("ctitle");
+function cscrollTick(){
+  const r=ccard.getBoundingClientRect(), vh=innerHeight;
+  const p=Math.max(0,Math.min(1,(vh-r.top)/(vh*0.85)));
+  const mob=innerWidth<=720;
+  const rot=(mob?16:22)*(1-p);
+  const sc=(mob? .96+.04*p : 1.04-.04*p);
+  ccard.style.transform=`rotateX(${rot}deg) scale(${sc})`;
+  ctitle.style.transform=`translateY(${-46*p}px)`;
+}
+addEventListener("scroll",cscrollTick,{passive:true});addEventListener("resize",cscrollTick);
+
+
+/* nav + hero parallax */
+const nav = document.getElementById("nav"), pl = document.getElementById("ploupe");
+addEventListener("scroll", ()=>{
+  nav.classList.toggle("scrolled", scrollY>30);
+  pl.style.transform = `translateY(${scrollY*.35}px) rotate(${scrollY*.02}deg)`;
+}, {passive:true});
+
+/* reveals */
+const io = new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}
+}),{threshold:.15});
+document.querySelectorAll(".rv").forEach(el=>io.observe(el));
+
+/* counters */
+const cio = new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting)return;cio.unobserve(e.target);
+  const el=e.target, n=+el.dataset.n, k=el.dataset.k, t0=performance.now();
+  (function tick(t){const p=Math.min(1,(t-t0)/1500),v=Math.round(n*(1-Math.pow(1-p,3)));
+    el.textContent = k? (v>=1000?(v/1000).toFixed(1).replace(".",",")+"K":v) : v;
+    if(p<1)requestAnimationFrame(tick);})(t0);
+}),{threshold:.5});
+document.querySelectorAll(".stat b").forEach(el=>cio.observe(el));
+
+/* categories from data */
+const CATNAMES = [
+  [100,"Colorants","Ils rendent tout plus appétissant — jaunes azoïques, caramels, dioxydes."],
+  [200,"Conservateurs","Nitrites, sulfites, benzoates — ils figent le temps dans l'assiette."],
+  [300,"Antioxydants & acidifiants","Ils empêchent le gras de rancir et acidifient tes sodas."],
+  [400,"Émulsifiants & texturants","Carraghénanes, gommes, mono-diglycérides — l'onctuosité chimique."],
+  [500,"Anti-agglomérants & sels","Silicates, hydroxydes, sels de fonte — la poudre reste poudre."],
+  [600,"Exhausteurs de goût","Glutamate et ses cousins — pour que tu en redemandes."],
+  [900,"Cires, gaz & édulcorants","Brillance des fruits, faux sucres, polymères."],
+  [1000,"Amidons & divers","Amidons modifiés, enzymes et le reste du laboratoire."]
+];
+function catOf(code){
+  const m = code.match(/E(\d+)/); if(!m) return 1000;
+  const n = +m[1];
+  if(n<200)return 100; if(n<300)return 200; if(n<400)return 300; if(n<500)return 400;
+  if(n<600)return 500; if(n<700)return 600; if(n<1000)return 900; return 1000;
+}
+const counts = {};
+DATA.forEach(d=>{const c=catOf(d.c);counts[c]=(counts[c]||0)+1;});
+const catsEl = document.getElementById("cats");
+CATNAMES.forEach(([k,name,desc],i)=>{
+  const el=document.createElement("div");
+  el.className="cat rv"; el.style.transitionDelay=(i*.06)+"s";
+  el.innerHTML=`<div class="range">E${k}${k<1000?"–E"+(k===900?999:k+99):"+"}</div><h3>${name}</h3><p>${desc}</p>
+  <div class="count">${counts[k]||0} additifs <span class="arrow">→</span></div>`;
+  el.onclick=()=>{filterCat=k;applyFilter();document.getElementById("explorer").scrollIntoView({behavior:"smooth"});};
+  el.addEventListener("mousemove",e=>{const r=el.getBoundingClientRect();el.style.setProperty("--mx",(e.clientX-r.left)+"px");el.style.setProperty("--my",(e.clientY-r.top)+"px");});
+  catsEl.appendChild(el); io.observe(el);
+});
+
+/* explorer */
+const grid=document.getElementById("grid"), q=document.getElementById("q"),
+      cnt=document.getElementById("count"), more=document.getElementById("more");
+let filterLevel=null, filterCat=null, filterVid=false, shown=60, current=DATA;
+
+function norm(s){return (s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");}
+function applyFilter(){
+  const term=norm(q.value.trim());
+  current = DATA.filter(d=>{
+    if(filterLevel!==null && d.l!==filterLevel) return false;
+    if(filterCat!==null && catOf(d.c)!==filterCat) return false;
+    if(filterVid && !d.v) return false;
+    if(term && !(norm(d.c).includes(term)||norm(d.n).includes(term)||norm(d.t).includes(term)||norm(d.a).includes(term))) return false;
+    return true;
+  });
+  shown=60; render();
+}
+function render(){
+  grid.innerHTML="";
+  current.slice(0,shown).forEach((d,i)=>{
+    const el=document.createElement("div");
+    el.className="add";
+    el.style.animation=`wordin .6s ${Math.min(i*.015,.4)}s cubic-bezier(.22,.9,.26,1) both`;
+    el.innerHTML=`<span class="dot l${d.l}"></span><div class="code">${d.c}</div><div class="nm">${d.n}</div><div class="tp">${d.t||""}</div>${d.v?'<span class="vd">▶ VIDÉO</span>':''}`;
+    el.onclick=()=>openModal(d);
+    grid.appendChild(el);
+  });
+  cnt.textContent = current.length+" résultat"+(current.length>1?"s":"");
+  more.style.display = current.length>shown ? "block":"none";
+}
+more.onclick=()=>{shown+=80;render();};
+q.addEventListener("input",applyFilter);
+document.querySelectorAll(".chip[data-l]").forEach(ch=>{
+  ch.onclick=()=>{
+    const l=+ch.dataset.l;
+    filterLevel = (filterLevel===l)?null:l;
+    document.querySelectorAll(".chip[data-l]").forEach(x=>x.classList.toggle("on",+x.dataset.l===filterLevel));
+    applyFilter();
+  };
+});
+document.getElementById("chipvid").onclick=function(){
+  filterVid=!filterVid;this.classList.toggle("on",filterVid);applyFilter();
+};
+addEventListener("keydown",e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();q.focus();document.getElementById("explorer").scrollIntoView({behavior:"smooth"});}
+  if(e.key==="Escape")closeModal();
+});
+
+/* modal */
+const ovl=document.getElementById("ovl"), modal=document.getElementById("modal"), mbody=document.getElementById("mbody");
+const LV=[["RISQUE FAIBLE","rgba(52,199,123,.15)","#34C77B"],["CONTROVERSÉ / SUSPECTÉ","rgba(240,160,40,.15)","#F0A028"],["PRÉOCCUPANT","rgba(224,49,49,.15)","#E03131"]];
+function openModal(d){
+  const [lt,bg,col]=LV[d.l];
+  mbody.innerHTML=`
+    <span class="lv" style="background:${bg};color:${col}">● ${lt}</span>
+    <h3>${d.c}</h3><h4>${d.n}</h4>
+    ${d.t?`<div class="row"><b>Rôle</b><p>${d.t}${d.g?" · "+d.g:""}</p></div>`:""}
+    ${d.r?`<div class="row"><b>Ce qu'on lui reproche</b><p>${d.r}</p></div>`:""}
+    ${d.a?`<div class="row"><b>Où il se cache</b><p>${d.a}</p></div>`:""}
+    ${d.v?`<a class="watch" href="https://www.tiktok.com/@cequetumanges1/video/${d.v}" target="_blank" rel="noopener">▶ Voir le coupable en vidéo</a>`:""}
+  `;
+  ovl.classList.add("on");modal.classList.add("on");
+}
+function closeModal(){ovl.classList.remove("on");modal.classList.remove("on");}
+ovl.onclick=closeModal;document.getElementById("mclose").onclick=closeModal;
+
+
+/* marquee de codes */
+(function(){
+  const mq=document.getElementById("mq");
+  const picks=DATA.filter(d=>d.l===2).slice(0,14).concat(DATA.filter(d=>d.l===1).slice(0,18));
+  const mk=()=>picks.map(d=>`<span class="${d.l===2?'hot':''}">${d.c} · ${d.n.split("(")[0].trim().slice(0,22)}</span>`).join("");
+  mq.innerHTML=mk()+mk();
+})();
+
+/* orbite des familles */
+(function(){
+  const orb=document.getElementById("orb"), wrap=document.getElementById("onodes"), card=document.getElementById("ocard");
+  let angle=0, auto=true, active=null;
+  const nodes=CATNAMES.map(([k,name,desc],i)=>{
+    const el=document.createElement("div");
+    el.className="onode";
+    el.innerHTML=`<div class="obtn">E${k}</div><div class="olabel">${name.split(" ")[0].toUpperCase()}</div>`;
+    el.onclick=(e)=>{
+      e.stopPropagation();
+      if(active===i){active=null;auto=true;card.classList.remove("on");el.classList.remove("act");return;}
+      active=i;auto=false;
+      document.querySelectorAll(".onode").forEach(n=>n.classList.remove("act"));
+      el.classList.add("act");
+      card.innerHTML=`<div class="or">FAMILLE E${k}</div><h4>${name}</h4><p>${desc}</p>
+        <a class="go" href="#explorer">Ouvrir le dossier — ${counts[k]||0} additifs →</a>`;
+      card.querySelector(".go").onclick=()=>{filterCat=k;applyFilter();};
+      card.classList.add("on");
+    };
+    wrap.appendChild(el);
+    return el;
+  });
+  orb.onclick=()=>{active=null;auto=true;card.classList.remove("on");nodes.forEach(n=>n.classList.remove("act"));};
+  function frame(){
+    if(auto)angle+=0.12;
+    const R=Math.min(orb.clientWidth*0.36,260);
+    nodes.forEach((el,i)=>{
+      const a=((i/nodes.length)*360+angle)*Math.PI/180;
+      const x=Math.cos(a)*R, y=Math.sin(a)*R*0.78;
+      const op=.45+.55*((1+Math.sin(a))/2);
+      const z=Math.round(100+50*Math.sin(a));
+      el.style.transform=`translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+      el.style.opacity=(active!==null&&el.classList.contains("act"))?1:op;
+      el.style.zIndex=el.classList.contains("act")?200:z;
+    });
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+render();
+</script>
+</body>
+</html>
